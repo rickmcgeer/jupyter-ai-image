@@ -34,15 +34,12 @@ builtin default coexists with, and doesn't block, a per-user key.
 
 ## Build
 
+Requires the [`ai-tools-launcher`](https://github.com/rickmcgeer/ai-tools-launcher)
+repo checked out as a sibling directory (`../ai-tools-launcher`) - the build
+context is the parent directory so the Dockerfile can `COPY` it in directly,
+without needing it published anywhere first.
+
 ```bash
 ./docker-build.sh            # builds & pushes rickmcgeer/jupyter-ai-image:<today>
 PUSH=0 ./docker-build.sh dev # build only, tag "dev"
 ```
-
-## Before this builds
-
-`ai_tools_launcher` isn't published to PyPI - the Dockerfile installs it
-straight from GitHub, so [`ai-tools-launcher`](https://github.com/rickmcgeer/ai-tools-launcher)
-needs to be pushed there first. For local iteration before that, swap the
-`pip install` line in the [Dockerfile](Dockerfile) for a bind-mounted local
-install instead.
