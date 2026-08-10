@@ -14,23 +14,18 @@ A JupyterLab image with:
   image just makes them available on `PATH`; each user logs in themselves
   the first time they open a tile.
 
-## Builtin key (TBD)
+## Builtin default model
 
 Every user gets a working default model - Gemini via Vertex AI
 (`vertex_ai/gemini-2.0-flash-001`) - with no setup, seeded by
 [`before-notebook.d/10-jupyter-ai-defaults.py`](before-notebook.d/10-jupyter-ai-defaults.py)
-on container start. This only works once the deployment supplies:
-
-- `GOOGLE_APPLICATION_CREDENTIALS` - path to a mounted GCP service-account
-  key with Vertex AI access
-- `GOOGLE_CLOUD_PROJECT` / `VERTEXAI_PROJECT` / `VERTEXAI_LOCATION` - the
-  target GCP project and region
-
-None of that is baked into the image - how the shared key gets provisioned
-and mounted (Kubernetes secret, `.env`, something else) is still an open
-question, decided per-deployment. Until it's wired up, users can still add
-their own provider key for any model through the AI Settings UI - the
-builtin default coexists with, and doesn't block, a per-user key.
+on container start. This just needs `GOOGLE_CLOUD_PROJECT` /
+`VERTEXAI_PROJECT` / `VERTEXAI_LOCATION` set in the environment - actual
+Vertex AI credentials come from GKE Workload Identity (see
+[jupyter-ai-deployment](https://github.com/rickmcgeer/jupyter-ai-deployment)),
+not from anything baked into this image or passed as a key file. Users can
+still add their own provider key for any model through the AI Settings UI -
+the builtin default coexists with, and doesn't block, a per-user key.
 
 ## Build
 
@@ -40,6 +35,10 @@ context is the parent directory so the Dockerfile can `COPY` it in directly,
 without needing it published anywhere first.
 
 ```bash
-./docker-build.sh            # builds & pushes rickmcgeer/jupyter-ai-image:<today>
+./docker-build.sh            # builds & pushes rickmcgeer/jupyter-ai-image:<today>, native arch
 PUSH=0 ./docker-build.sh dev # build only, tag "dev"
+
+# Cross-build for a real GKE cluster (standard node pools are amd64) when
+# testing/building from an arm64 (Apple Silicon) machine:
+PLATFORM=linux/amd64 ./docker-build.sh dev
 ```
