@@ -17,7 +17,7 @@ A JupyterLab image with:
 ## Builtin default model
 
 Every user gets a working default model - Gemini via Vertex AI
-(`vertex_ai/gemini-2.0-flash-001`) - with no setup, seeded by
+(`vertex_ai/gemini-2.5-flash`) - with no setup, seeded by
 [`before-notebook.d/10-jupyter-ai-defaults.py`](before-notebook.d/10-jupyter-ai-defaults.py)
 on container start. This just needs `GOOGLE_CLOUD_PROJECT` /
 `VERTEXAI_PROJECT` / `VERTEXAI_LOCATION` set in the environment - actual
