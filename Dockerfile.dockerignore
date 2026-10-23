@@ -1,0 +1,13 @@
+# Applies only to Dockerfile (BuildKit's <name>.dockerignore convention). The
+# build context is the parent directory so the sibling extension repos can be
+# COPY'd in (see docker-build.sh); keep local build output out of it so the
+# extensions always compile from source inside the image instead of reusing a
+# stale prebuilt labextension (hatch skips the build if one is present) or
+# shipping a developer's node_modules.
+**/.git
+**/node_modules
+**/.yarn
+**/lib
+**/labextension
+**/_version.py
+**/.DS_Store

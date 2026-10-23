@@ -95,6 +95,15 @@ RUN fix-permissions "/opt/conda/share/jupyter/labextensions/galyleo-ai-persona"
 COPY ai-tools-launcher /tmp/ai-tools-launcher
 RUN pip install --no-cache-dir /tmp/ai-tools-launcher && rm -rf /tmp/ai-tools-launcher
 
+# Hub Services launcher: a "Hub Services" row on the Launcher with one tile per
+# JupyterHub service (display: True) the user can reach - the Hub's Services
+# menu, inside JupyterLab. Needs the list:services + read:services scopes on
+# the Hub's `user` role (see jupyterhub-chart/values-template.yaml in
+# jupyter-ai-deployment); without them it just shows nothing. Same
+# sibling-repo build as above.
+COPY hub-services-launcher /tmp/hub-services-launcher
+RUN pip install --no-cache-dir /tmp/hub-services-launcher && rm -rf /tmp/hub-services-launcher
+
 # Seeds a default model (Gemini via Vertex AI) into every user's Jupyter AI
 # config on container start, so chat works with no setup. See the script for
 # details; the mounted GCP credentials it relies on are set up in the
